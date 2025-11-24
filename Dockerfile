@@ -199,6 +199,13 @@ COPY "volumes/config/apache.pkp.conf" "${PKP_WEB_CONF}"
 
 # ====================================================================
 # Assumptions:
+# - We have a container mounted at /var/www/public for public files
+# - We have a container mounted at /var/www/files for uploaded files
+# - We have a container mounted at /var/log/apache2 for logs
+# - We have a container mounted at /var/www/config where a file named
+#   pkp.config.inc.php is stored with the configuration settings, and
+#   a file named apache.htaccess is stored with Apache configuration
+#   overrides.
 # - We will set this behind a service that handles TLS termination.
 # - We will create separate containers for the web server and for
 #   running scheduled tasks (cron jobs).
@@ -206,19 +213,16 @@ COPY "volumes/config/apache.pkp.conf" "${PKP_WEB_CONF}"
 # Final configuration steps:
 # - Enable apache modules (rewrite)
 # - Redirect errors to stderr.
-# - Set a config.inc.php
-# - Add pkp-run-sheduled to crontab
+# - Link the config.inc.php and .htaccess files
 # - Create container.version file
 RUN a2enmod rewrite && \
     \
     echo "log_errors = On" >> /usr/local/etc/php/conf.d/log-errors.ini && \
     echo "error_log = /dev/stderr" >> /usr/local/etc/php/conf.d/log-errors.ini && \
     \
-    cp -a config.TEMPLATE.inc.php "${PKP_CONF}" && \
+    ln -sf /var/www/config/pkp.config.inc.php "${PKP_CONF}" && \
+    ln -sf /var/www/config/apache.htaccess .htaccess && \
     chown -R ${WEB_USER:-33}:${WEB_USER:-33} "${WWW_PATH_ROOT}" && \
-    \
-    sed -i -e '\#<Directory />#,\#</Directory>#d' ${WWW_PATH_CONF} && \
-    sed -i -e "s/^ServerSignature.*/ServerSignature Off/" ${WWW_PATH_CONF} && \
     \
     . /etc/os-release && \
     echo "${PKP_TOOL}-${PKP_VERSION} with ${WEB_SERVER} over ${ID}-${VERSION_ID} [build: $(date +%Y%m%d-%H%M%S)]" \
