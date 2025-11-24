@@ -200,6 +200,8 @@ COPY "volumes/config/apache.pkp.conf" "${PKP_WEB_CONF}"
 # ====================================================================
 # Assumptions:
 # - We will set this behind a service that handles TLS termination.
+# - We will create separate containers for the web server and for
+#   running scheduled tasks (cron jobs).
 
 # Final configuration steps:
 # - Enable apache modules (rewrite)
@@ -214,8 +216,6 @@ RUN a2enmod rewrite && \
     \
     cp -a config.TEMPLATE.inc.php "${PKP_CONF}" && \
     chown -R ${WEB_USER:-33}:${WEB_USER:-33} "${WWW_PATH_ROOT}" && \
-    \
-    echo "0 * * * *   pkp-run-scheduled" | crontab - && \
     \
     sed -i -e '\#<Directory />#,\#</Directory>#d' ${WWW_PATH_CONF} && \
     sed -i -e "s/^ServerSignature.*/ServerSignature Off/" ${WWW_PATH_CONF} && \
