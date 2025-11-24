@@ -231,14 +231,47 @@ RUN a2enmod rewrite && \
     \
     chmod +x "${PKP_CMD}"
 
+# ====================================================================
+# The following is mostly from the Google Cloud Run PHP web app quick
+# start guide. See:
+# https://cloud.google.com/run/docs/quickstarts/build-and-deploy/deploy-php-service
+
+# Configure PHP for Cloud Run.
+# Precompile PHP code with opcache.
+RUN docker-php-ext-install -j "$(nproc)" opcache
+RUN set -ex; \
+  { \
+    echo "; Cloud Run enforces memory & timeouts"; \
+    echo "memory_limit = -1"; \
+    echo "max_execution_time = 0"; \
+    echo "; File upload at Cloud Run network limit"; \
+    echo "upload_max_filesize = 32M"; \
+    echo "post_max_size = 32M"; \
+    echo "; Configure Opcache for Containers"; \
+    echo "opcache.enable = On"; \
+    echo "opcache.validate_timestamps = Off"; \
+    echo "; Configure Opcache Memory (Application-specific)"; \
+    echo "opcache.memory_consumption = 32"; \
+  } > "$PHP_INI_DIR/conf.d/cloud-run.ini"
+
+# # Ensure the webserver has permissions to execute index.php
+# RUN chown -R www-data:www-data /var/www/html
+
+# Use the PORT environment variable in Apache configuration files.
+# https://cloud.google.com/run/docs/reference/container-contract#port
+RUN sed -i 's/80/${PORT}/g' /etc/apache2/sites-available/000-default.conf /etc/apache2/ports.conf
+
+# ====================================================================
+# Finish up
+
 # Expose web ports and declare volumes
 EXPOSE ${HTTP_PORT:-8080}
 EXPOSE ${HTTPS_PORT:-8443}
 
 VOLUME [ "${WWW_PATH_ROOT}/files", "${WWW_PATH_ROOT}/public" ]
 
-# Changing to a rootless user
-USER ${WEB_USER:-33} 
+# # Changing to a rootless user
+# USER ${WEB_USER:-33}
 
 # Default start command
 CMD "${PKP_CMD}"
