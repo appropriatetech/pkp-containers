@@ -1,10 +1,18 @@
 # Default build arguments (modify .env instead when "docker compose build")
-ARG PKP_TOOL=ojs                           # Options are: ojs, omp, ops.
-ARG PKP_VERSION=3_3_0-21                   # Same as PKP's versions.
-ARG WEB_SERVER=php:8.2-apache              # Web server and PHP version
-ARG WEB_USER=www-data                      # Web user for web server (www-data,33)
-ARG BUILD_PKP_APP_OS=alpine:3.22           # OS used to build (not run).  
-ARG BUILD_PKP_APP_PATH=/app                # Where app is built.
+
+# PKP_TOOL - Options are: ojs, omp, ops.
+ARG PKP_TOOL=ojs                           
+# PKP_VERSION - Same as PKP's versions.
+ARG PKP_VERSION=3_3_0-21                   
+# WEB_SERVER - Web server and PHP version
+ARG WEB_SERVER=php:8.2-apache              
+# WEB_USER - Web user for web server (www-data,33)
+ARG WEB_USER=www-data                      
+# BUILD_PKP_APP_OS - OS used to build (not run).  
+ARG BUILD_PKP_APP_OS=alpine:3.22           
+# BUILD_PKP_APP_PATH - Where app is built.
+ARG BUILD_PKP_APP_PATH=/app                
+
 ARG BUILD_LABEL=notset
 
 
