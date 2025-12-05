@@ -1,4 +1,4 @@
 #!/bin/sh
 
 echo "[PKP runScheduledTasks] running..."
-php /var/www/html/tools/runScheduledTasks.php
+php /var/www/html/lib/pkp/tools/scheduler.php run
