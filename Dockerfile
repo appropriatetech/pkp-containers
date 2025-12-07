@@ -32,6 +32,15 @@ RUN apk add --no-cache curl tar && \
     tar --strip-components=1 -xzf "${PKP_TOOL}-${pkpVersion}.tar.gz" && \
     rm ${PKP_TOOL}-${pkpVersion}.tar.gz
 
+# Patch for OJS 3.5.0-2 reviewer search bug
+# See: https://github.com/pkp/pkp-lib/issues/12100#issuecomment-3614365262
+#
+# This patch updates line 256 in ${BUILD_PKP_APP_PATH}/lib/pkp/api/v1/users/PKPUserController.php
+# from `'items' => $items,` to `'items' => array_values($items),`
+RUN if [ "${PKP_TOOL}" = "ojs" ] && [ "${PKP_VERSION}" = "3_5_0-2" ]; then \
+        sed -i '256s/^\(\s*'"'"'items'"'"'\s*=>\s*\)\$items,/\1array_values\(\$items\),/' \
+        "${BUILD_PKP_APP_PATH}/lib/pkp/api/v1/users/PKPUserController.php"; \
+    fi
 
 # Stage 2: Build PHP extensions and dependencies
 FROM ${WEB_SERVER} AS pkp_build
