@@ -1,17 +1,17 @@
 # Default build arguments (modify .env instead when "docker compose build")
 
 # PKP_TOOL - Options are: ojs, omp, ops.
-ARG PKP_TOOL=ojs                           
+ARG PKP_TOOL=ojs
 # PKP_VERSION - Same as PKP's versions.
-ARG PKP_VERSION=3_3_0-21                   
+ARG PKP_VERSION=3_3_0-21
 # WEB_SERVER - Web server and PHP version
-ARG WEB_SERVER=php:8.2-apache              
+ARG WEB_SERVER=php:8.2-apache
 # WEB_USER - Web user for web server (www-data,33)
-ARG WEB_USER=www-data                      
-# BUILD_PKP_APP_OS - OS used to build (not run).  
-ARG BUILD_PKP_APP_OS=alpine:3.22           
+ARG WEB_USER=www-data
+# BUILD_PKP_APP_OS - OS used to build (not run).
+ARG BUILD_PKP_APP_OS=alpine:3.22
 # BUILD_PKP_APP_PATH - Where app is built.
-ARG BUILD_PKP_APP_PATH=/app                
+ARG BUILD_PKP_APP_PATH=/app
 
 ARG BUILD_LABEL=notset
 
@@ -75,7 +75,7 @@ ENV PKP_DEPS="\
 ENV PHP_EXTENSIONS="\
     # Image processing
     gd \
-\ 
+\
     # Internationalization
     gettext \
     intl \
@@ -86,15 +86,15 @@ ENV PHP_EXTENSIONS="\
     # Database connectivity - MySQL/MariaDB
     mysqli \
     pdo_mysql \
-\    
+\
     # Database connectivity - PostgreSQL
     pgsql \
     pdo_pgsql \
-\    
+\
     # XML processing
     xml \
     xsl \
-\    
+\
     # Compression
     zip \
 \
@@ -153,7 +153,7 @@ ENV PKP_RUNTIME_LIBS="\
     libxslt1.1 \
     libicu-dev \
     libzip-dev \
-\ 
+\
     # Image processing
     libjpeg62-turbo \
     libpng16-16 \
@@ -204,6 +204,7 @@ WORKDIR ${WWW_PATH_ROOT}/html
 # Copy source code and configuration files
 COPY --from=pkp_code "${BUILD_PKP_APP_PATH}" .
 COPY "templates/pkp/root/" /
+COPY "tools/automateCopyeditingTransition.php" "tools/automateCopyeditingTransition.php"
 COPY "volumes/config/apache.pkp.conf" "${PKP_WEB_CONF}"
 
 # ====================================================================
