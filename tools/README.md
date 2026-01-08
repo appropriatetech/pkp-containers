@@ -47,3 +47,34 @@ php tools/automateCopyeditingTransition.php --submissionId 276
 - The script injects the submission's context into the request router before processing. This is necessary because OJS's notification system expects a valid HTTP request context, which doesn't exist in CLI mode.
 - The logged-in user (from `CommandLineTool`) is used as the editor for all decisions.
 - Submissions must have an existing external review round (Round 1) for this script to work correctly.
+
+## automateRequestRevisions.php
+
+### Purpose
+
+This script automates the request for revisions for submissions in **External Review Round 2**. It sets the decision to "Request Revisions" (which means revisions will not be subject to a new round of peer reviews) and **suppresses all email notifications**.
+
+### Background
+
+In the ICAT workflow, we sometimes need to bulk-process submissions that have completed a second round of review and need revisions from the author, but do not require a third round of review. Doing this manually via the UI involves ensuring the "Review Round Status" is set correctly and unchecking the notification box, which is error-prone at scale.
+
+### How It Works
+
+1.  Identifies submissions in `WORKFLOW_STAGE_ID_EXTERNAL_REVIEW`.
+2.  Checks if the submission is in **Review Round 2**.
+3.  Records a **PENDING_REVISIONS (Decision 4)** decision.
+4.  Suppresses email notifications by passing an empty actions list.
+
+### Usage
+
+```bash
+# Dry run
+php tools/automateRequestRevisions.php --dry-run
+
+# Process all eligible submissions
+php tools/automateRequestRevisions.php
+
+# Process a specific submission
+php tools/automateRequestRevisions.php --submissionId 123
+```
+

@@ -205,6 +205,7 @@ WORKDIR ${WWW_PATH_ROOT}/html
 COPY --from=pkp_code "${BUILD_PKP_APP_PATH}" .
 COPY "templates/pkp/root/" /
 COPY "tools/automateCopyeditingTransition.php" "tools/automateCopyeditingTransition.php"
+COPY "tools/automateRequestRevisions.php" "tools/automateRequestRevisions.php"
 COPY "volumes/config/apache.pkp.conf" "${PKP_WEB_CONF}"
 
 # ====================================================================
