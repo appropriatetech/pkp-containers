@@ -1,0 +1,6 @@
+# Override .gitignore for Cloud Build -- we need tools/email-relay/
+# in the build context even though it's gitignored (it's copied in
+# by submit_build.py before build submission).
+.swp
+.sandbox
+older
