@@ -211,7 +211,7 @@ COPY "volumes/config/apache.pkp.conf" "${PKP_WEB_CONF}"
 # Install Python and email relay dependencies
 RUN apt-get update && \
     apt-get install -y --no-install-recommends python3 python3-pip && \
-    pip3 install --root-user-action=ignore --break-system-packages sqlalchemy mysql-connector-python alembic && \
+    pip3 install --root-user-action=ignore --break-system-packages sqlalchemy mysql-connector-python alembic click && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Copy email relay scripts
