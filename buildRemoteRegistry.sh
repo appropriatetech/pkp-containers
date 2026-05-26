@@ -1,5 +1,16 @@
 #!/bin/bash
 
+# =============================================================================
+# Script:  build-and-push.sh
+# Description: 
+# Builds and pushes Docker images for PKP tools to DockerHub with multiple 
+# tagging options including explicit, implicit, and version-based aliases.
+# Usage:   ./build-and-push.sh [PKP_TOOL] [PKP_VERSION]
+# Date:    2024-06-12
+# License: GPL (http://www.gnu.org/licenses/gpl.html)
+# Author:  Marc Bria
+# =============================================================================
+
 # Normalize WEB_SERVER to generate a tag-friendly string
 normalizeWebServer() {
     local webServer=$1
@@ -22,7 +33,7 @@ showBuildParameters() {
     echo "  - WEB_SERVER: ${WEB_SERVER}"
     echo "Tags and Alias:"
     echo "  - Explicit (unique name): ${REMOTE_REPO}:${TAG_EXPLICIT}"
-    echo "You will also have the option to create or update the following aliases:"
+    echo "After this, you will be asked (one by one) to create or update the following aliases:"
     echo "  - Implicit (pkp name): ${REMOTE_REPO}:${TAG_IMPLICIT}"
     echo "  - LTS: lts-${VER_2DIGITS}, lts"
     echo "  - Stable: stable-${VER_3DIGITS}"
