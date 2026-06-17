@@ -196,6 +196,7 @@ COPY --from=pkp_code "${BUILD_PKP_APP_PATH}" .
 COPY "templates/pkp/root/" /
 COPY "tools/automateCopyeditingTransition.php" "tools/automateCopyeditingTransition.php"
 COPY "tools/automateRequestRevisions.php" "tools/automateRequestRevisions.php"
+COPY "tools/automateMissingRevisions.php" "tools/automateMissingRevisions.php"
 COPY "volumes/config/apache.pkp.conf" "${PKP_WEB_CONF}"
 
 # Install Python and email relay dependencies
